@@ -4,6 +4,8 @@ import { withStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 import Grid from "@material-ui/core/Grid";
 
 function getModalStyle() {
@@ -52,6 +54,10 @@ const styles = theme => ({
     display: "flex",
     justyfyContent: "space-between",
     width: "100%"
+  },
+  progress: {
+    margin: theme.spacing.unit * 2,
+    color: "#00695c"
   }
 });
 
@@ -62,7 +68,7 @@ class SimpleModal extends React.Component {
 
   render() {
     console.log(this);
-    const { classes, open } = this.props;
+    const { classes, open, loading } = this.props;
     return (
       <div>
         <Modal
@@ -72,36 +78,50 @@ class SimpleModal extends React.Component {
           onClose={this.props.handleOpen}
         >
           <div style={getModalStyle()} className={classes.paper}>
-            <TextField
-              id="standard-name"
-              label="Nome github"
-              className={classes.textField}
-              onChange={this.handleChange("name")}
-              margin="normal"
-            />
-            <Grid
-              container
-              direction="row"
-              justify="space-around"
-              alignItems="center"
-            >
-              <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={() => this.props.search()}
-              >
-                Search
-              </Button>
-              <Button
-                onClick={this.props.handleOpen}
-                variant="contained"
-                color="secondary"
-                className={classes.button}
-              >
-                Cancelar
-              </Button>
-            </Grid>
+            {loading ? (
+              <>
+              <CircularProgress
+                disableShrink
+                className={classes.progress}
+                size={30}
+                thickness={5}
+              />
+              Carregando...
+              </>
+            ) : (
+              <>
+                <TextField
+                  id="standard-name"
+                  label="Nome github"
+                  className={classes.textField}
+                  onChange={this.handleChange("name")}
+                  margin="normal"
+                />
+                <Grid
+                  container
+                  direction="row"
+                  justify="space-around"
+                  alignItems="center"
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    onClick={() => this.props.search()}
+                  >
+                    Search
+                  </Button>
+                  <Button
+                    onClick={this.props.handleOpen}
+                    variant="contained"
+                    color="secondary"
+                    className={classes.button}
+                  >
+                    Cancelar
+                  </Button>
+                </Grid>
+              </>
+            )}
           </div>
         </Modal>
       </div>
