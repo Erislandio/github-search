@@ -62,9 +62,17 @@ const styles = theme => ({
 });
 
 class SimpleModal extends React.Component {
+
   handleChange = name => event => {
     this.props.name(event.target.value);
   };
+
+  handleSearch = (e) => {
+    if (e.shiftKey === "Enter") {
+      this.props.search()
+    }
+  }
+
 
   render() {
     console.log(this);
@@ -80,48 +88,49 @@ class SimpleModal extends React.Component {
           <div style={getModalStyle()} className={classes.paper}>
             {loading ? (
               <>
-              <CircularProgress
-                disableShrink
-                className={classes.progress}
-                size={30}
-                thickness={5}
-              />
-              Carregando...
+                <CircularProgress
+                  disableShrink
+                  className={classes.progress}
+                  size={30}
+                  thickness={5}
+                />
+                Carregando...
               </>
             ) : (
-              <>
-                <TextField
-                  id="standard-name"
-                  label="Nome github"
-                  className={classes.textField}
-                  onChange={this.handleChange("name")}
-                  margin="normal"
-                />
-                <Grid
-                  container
-                  direction="row"
-                  justify="space-around"
-                  alignItems="center"
-                >
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    onClick={() => this.props.search()}
+                <>
+                  <TextField
+                    id="standard-name"
+                    label="Nome github"
+                    className={classes.textField}
+                    onChange={this.handleChange("name")}
+                    margin="normal"
+                    onKeyUp={e => this.handleSearch(e)}
+                  />
+                  <Grid
+                    container
+                    direction="row"
+                    justify="space-around"
+                    alignItems="center"
                   >
-                    Search
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      className={classes.button}
+                      onClick={() => this.props.search()}
+                    >
+                      Search
                   </Button>
-                  <Button
-                    onClick={this.props.handleOpen}
-                    variant="contained"
-                    color="secondary"
-                    className={classes.button}
-                  >
-                    Cancelar
+                    <Button
+                      onClick={this.props.handleOpen}
+                      variant="contained"
+                      color="secondary"
+                      className={classes.button}
+                    >
+                      Cancelar
                   </Button>
-                </Grid>
-              </>
-            )}
+                  </Grid>
+                </>
+              )}
           </div>
         </Modal>
       </div>

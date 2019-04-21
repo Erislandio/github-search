@@ -4,10 +4,11 @@ import Header from "./components/header/Index";
 import Modal from "./components/modal/Index";
 import Snackbar from "@material-ui/core/Snackbar";
 import axios from "axios";
-import { withStyles } from "@material-ui/core/styles";
-import Card from "./Ca";
+import Card from "./Card";
+import Footer from "./components/Footer";
 
 import "./styles.css";
+import Slide from "./components/Slide";
 
 const base_url = "https://api.github.com/users";
 
@@ -21,7 +22,9 @@ export default class App extends Component {
       repos: [],
       user: {},
       loading: false,
-      erro: ""
+      erro: "",
+      openSnack: false,
+      openUserSlide: false
     };
   }
 
@@ -42,8 +45,13 @@ export default class App extends Component {
               this.setState({
                 repos: repos.data,
                 loading: false,
-                openModal: false
+                openModal: false,
+                openSnack: true
               });
+
+              setTimeout(() => {
+                this.setState({ openSnack: false });
+              }, 3000);
             });
         });
       } catch (error) {
@@ -60,14 +68,24 @@ export default class App extends Component {
     this.setState({ userName: name });
   };
 
+  hadlenOpenUserSlider = () => {
+    this.setState({ openUserSlide: !this.state.openUserSlide });
+  };
+
   render() {
     console.log(this);
 
-    const { repos, userName, erro } = this.state;
+    const { repos, userName, erro, user, openSnack } = this.state;
 
     return (
       <div className="app">
-        <Header open={this.hadlenOpenModal} />
+        <Header
+          open={this.hadlenOpenModal}
+          img={user.avatar_url}
+          name={user.name}
+          openSlideUser={this.hadlenOpenUserSlider}
+        />
+        <Slide open={this.state.openUserSlide} img={user.avatar_url} />
         <Modal
           open={this.state.openModal}
           handleOpen={this.hadlenOpenModal}
@@ -77,9 +95,10 @@ export default class App extends Component {
           repos={this.state.repos}
           erro={this.state.erro}
         />
-        <Card repos={repos} />
+        <Card repos={repos} img={user.avatar_url} />
+        <Footer />
         <Snackbar
-          open={repos.length ? true : false}
+          open={openSnack ? true : false}
           autoHideDuration={3000}
           onClose={this.handleClose}
           ContentProps={{
@@ -101,7 +120,7 @@ export default class App extends Component {
             }}
             message={
               <span id="snackbar-fab-message-id">
-                Usuário {userName} nçao pode ser encontrado{" "}
+                Usuário {userName} não pode ser encontrado{" "}
               </span>
             }
           />
